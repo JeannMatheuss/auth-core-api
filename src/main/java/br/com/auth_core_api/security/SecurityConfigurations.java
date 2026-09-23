@@ -1,5 +1,6 @@
 package br.com.auth_core_api.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,26 +12,26 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity // Ativa as configurações de segurança personalizadas
+@EnableWebSecurity
 public class SecurityConfigurations {
+
+    @Autowired
+    private SecurityFilter securityFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                // Desativa a proteção CSRF, pois como vamos usar JWT (token), não somos vulneráveis a esse tipo de ataque
                 .csrf(csrf -> csrf.disable())
-                // Muda o gerenciamento de sessão de STATEFUL (guarda estado) para STATELESS (não guarda estado, comum em APIs REST)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // Configura quais rotas são abertas e quais precisam de token
                 .authorizeHttpRequests(authorize -> authorize
-                        // Libera as rotas de login e cadastro para qualquer um acessar (afinal, o usuário ainda não tem token)
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        // Qualquer outra rota precisará estar autenticada
                         .anyRequest().authenticated()
                 )
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
