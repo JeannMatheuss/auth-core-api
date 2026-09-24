@@ -35,13 +35,11 @@ public class SecurityConfigurations {
                 .build();
     }
 
-    // Esse Bean é necessário para podermos injetar o AuthenticationManager no nosso controller de login mais tarde
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    // Esse Bean diz ao Spring que as senhas no nosso banco estarão criptografadas com o algoritmo BCrypt
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

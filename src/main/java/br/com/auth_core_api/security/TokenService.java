@@ -15,20 +15,18 @@ import java.time.ZoneOffset;
 @Service
 public class TokenService {
 
-    // O Spring vai injetar o valor do "secret" que configurarmos no application.properties
     @Value("${api.security.token.secret}")
     private String secret;
 
     public String generateToken(User user) {
         try {
-            // O algoritmo de criptografia do token. O "secret" é a senha que só nossa API conhece
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             return JWT.create()
-                    .withIssuer("auth-api") // Quem está emitindo o token (nossa API)
-                    .withSubject(user.getLogin()) // Quem é o dono do token (o usuário logado)
-                    .withExpiresAt(genExpirationDate()) // Tempo de expiração
-                    .sign(algorithm); // Assina e gera o token
+                    .withIssuer("auth-api")
+                    .withSubject(user.getLogin())
+                    .withExpiresAt(genExpirationDate())
+                    .sign(algorithm);
         } catch (JWTCreationException exception) {
             throw new RuntimeException("Erro ao gerar token JWT", exception);
         }
@@ -41,14 +39,13 @@ public class TokenService {
             return JWT.require(algorithm)
                     .withIssuer("auth-api")
                     .build()
-                    .verify(token) // Verifica se o token é válido, se não expirou, e se a assinatura bate
-                    .getSubject(); // Pega o dono do token (o login do usuário)
+                    .verify(token)
+                    .getSubject();
         } catch (JWTVerificationException exception) {
-            return ""; // Retorna string vazia se der erro (token inválido/expirado)
+            return "";
         }
     }
 
-    // Método auxiliar para definir o tempo de validade do token (Ex: 2 horas)
     private Instant genExpirationDate() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }

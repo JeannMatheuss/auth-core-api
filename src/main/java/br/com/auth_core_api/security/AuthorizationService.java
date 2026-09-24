@@ -13,8 +13,6 @@ public class AuthorizationService implements UserDetailsService {
     @Autowired
     private UserRepository repository;
 
-
-    // Toda vez que alguém tentar logar, o Spring vai chamar esse método e nós dizemos a ele para procurar no nosso banco usando o repositório que criamos.
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findByLogin(username);
