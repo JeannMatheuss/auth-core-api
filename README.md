@@ -2,7 +2,7 @@
 
 Este projeto é uma API RESTful desenvolvida em Java com Spring Boot, focada em implementar um sistema robusto de autenticação e autorização utilizando **Spring Security** e **JSON Web Tokens (JWT)**. 
 
-Foi construído como um projeto de portfólio para demonstrar boas práticas de segurança, criptografia de senhas e proteção de rotas (Stateless) em aplicações backend.
+Foi construído como um projeto de estudo para demonstrar boas práticas de segurança, criptografia de senhas e proteção de rotas (Stateless) em aplicações backend.
 
 ## 🚀 Tecnologias Utilizadas
 
